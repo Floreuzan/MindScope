@@ -1,0 +1,107 @@
+stages:
+  generate_data:
+    cmd: python src/generate_data.py
+    outs:
+      - data/raw/generated_dataset.csv
+
+  preprocess:
+    cmd: python src/preprocessing.py
+    deps:
+      - data/raw/generated_dataset.csv
+      - src/preprocessing.py
+    outs:
+      - data/processed/cleaned.csv
+
+  features_nlp:
+    cmd: python src/features_nlp.py #--use_existing_split
+    deps:
+      - data/processed/cleaned.csv
+      - src/features_nlp.py
+    outs:
+      - features/nlp/tfidf.csv
+      - features/nlp/glove.csv
+      - features/nlp/bert.csv
+
+  features_structured:
+    cmd: python src/features_structured.py
+    deps:
+      - data/processed/cleaned.csv
+      - src/features_structured.py
+    outs:
+      - features/structured/structured_features.csv
+
+  visualize_features:
+    cmd: python src/visualize_features.py
+    deps:
+      - src/visualize_features.py
+      - features/nlp/tfidf.csv
+      - features/nlp/glove.csv
+      - features/nlp/bert.csv
+      - features/structured/structured_features.csv
+    outs:
+      - reports/figures
+
+
+  create_split:
+    cmd: python main.py --stage split --model logreg --features all
+    deps:
+      - main.py
+    outs:
+      - data/splits/logreg_all_train_indices.csv
+      - data/splits/logreg_all_test_indices.csv
+
+
+  train_model:
+    cmd: python main.py --stage train --model logreg --features all
+    deps:
+      - main.py
+      - src/models/train_model.py
+      - features/nlp/tfidf.csv
+      - features/nlp/glove.csv
+      - features/nlp/bert.csv
+      - features/structured/structured_features.csv
+    outs:
+      - models/logreg_all.joblib
+
+  evaluate_model:
+    cmd: python main.py --stage evaluate --model logreg --features all
+    deps:
+      - main.py
+      - models/logreg_all.joblib
+      - src/models/evaluate.py
+      - features/nlp/tfidf.csv
+      - features/nlp/glove.csv
+      - features/nlp/bert.csv
+      - features/structured/structured_features.csv
+    outs:
+      - results/evaluation_metrics.txt
+
+  create_split_structured:
+    cmd: python main.py --stage split --model logreg --features structured
+    deps:
+      - main.py
+    outs:
+      - data/splits/logreg_structured_train_indices.csv
+      - data/splits/logreg_structured_test_indices.csv
+
+  train_model_structured:
+    cmd: python main.py --stage train --model logreg --features structured
+    deps:
+      - main.py
+      - features/structured/structured_features.csv
+      - data/splits/logreg_structured_train_indices.csv
+      - data/splits/logreg_structured_test_indices.csv
+    outs:
+      - models/logreg_structured.joblib
+      - models/logreg_structured_scaler.joblib
+
+
+  explain_model:
+    cmd: python main.py --stage explain --model logreg --features structured
+    deps:
+      - main.py
+      - models/logreg_structured.joblib
+      - src/models/explain.py
+      - features/structured/structured_features.csv
+    outs:
+      - results/shap_summary_logreg_structured.png

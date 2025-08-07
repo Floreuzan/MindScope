@@ -1,0 +1,246 @@
+schema: '2.0'
+stages:
+  generate_data:
+    cmd: python src/generate_data.py
+    outs:
+    - path: data/raw/generated_dataset.csv
+      hash: md5
+      md5: c377133c6fe1c58699d78c60f4b0a273
+      size: 104737
+  preprocess:
+    cmd: python src/preprocessing.py
+    deps:
+    - path: data/raw/generated_dataset.csv
+      hash: md5
+      md5: c377133c6fe1c58699d78c60f4b0a273
+      size: 104737
+    - path: src/preprocessing.py
+      hash: md5
+      md5: 8624f672c6766923d82527dd745cb20c
+      size: 4663
+    outs:
+    - path: data/processed/cleaned.csv
+      hash: md5
+      md5: 66d3b83880554cd1244b656d4c44e35f
+      size: 160989
+  features_nlp:
+    cmd: python src/features_nlp.py
+    deps:
+    - path: data/processed/cleaned.csv
+      hash: md5
+      md5: 66d3b83880554cd1244b656d4c44e35f
+      size: 160989
+    - path: src/features_nlp.py
+      hash: md5
+      md5: 5e763a0fe0247fa1bb5a56dfd92acd89
+      size: 19930
+    outs:
+    - path: features/nlp/bert.csv
+      hash: md5
+      md5: e30a7060a123b802b9df3bf118ddeee7
+      size: 12437331
+    - path: features/nlp/glove.csv
+      hash: md5
+      md5: 091a600128c946150613f8a9a62b720c
+      size: 1623529
+    - path: features/nlp/tfidf.csv
+      hash: md5
+      md5: 9a480bb7769447c2da99f90704a1a46c
+      size: 834262
+  features_structured:
+    cmd: python src/features_structured.py
+    deps:
+    - path: data/processed/cleaned.csv
+      hash: md5
+      md5: 66d3b83880554cd1244b656d4c44e35f
+      size: 160989
+    - path: src/features_structured.py
+      hash: md5
+      md5: 855bb8bdf0fa2db6572a0061e8927e00
+      size: 11063
+    outs:
+    - path: features/structured/structured_features.csv
+      hash: md5
+      md5: e7fdc4ec0e6939aaf0a30aede2268eb8
+      size: 70950
+  visualize_features:
+    cmd: python src/visualize_features.py
+    deps:
+    - path: features/nlp/bert.csv
+      hash: md5
+      md5: e30a7060a123b802b9df3bf118ddeee7
+      size: 12437331
+    - path: features/nlp/glove.csv
+      hash: md5
+      md5: 091a600128c946150613f8a9a62b720c
+      size: 1623529
+    - path: features/nlp/tfidf.csv
+      hash: md5
+      md5: 9a480bb7769447c2da99f90704a1a46c
+      size: 834262
+    - path: features/structured/structured_features.csv
+      hash: md5
+      md5: e7fdc4ec0e6939aaf0a30aede2268eb8
+      size: 70950
+    - path: src/visualize_features.py
+      hash: md5
+      md5: d5f1a71bdb57827dc32674b3bd5922bf
+      size: 10285
+    outs:
+    - path: reports/figures
+      hash: md5
+      md5: 26f6f5399b250c6d28985bb37f28f6a3.dir
+      size: 701558
+      nfiles: 10
+  train_model:
+    cmd: python main.py --stage train --model logreg --features all
+    deps:
+    - path: features/nlp/bert.csv
+      hash: md5
+      md5: e30a7060a123b802b9df3bf118ddeee7
+      size: 12437331
+    - path: features/nlp/glove.csv
+      hash: md5
+      md5: 091a600128c946150613f8a9a62b720c
+      size: 1623529
+    - path: features/nlp/tfidf.csv
+      hash: md5
+      md5: 9a480bb7769447c2da99f90704a1a46c
+      size: 834262
+    - path: features/structured/structured_features.csv
+      hash: md5
+      md5: e7fdc4ec0e6939aaf0a30aede2268eb8
+      size: 70950
+    - path: main.py
+      hash: md5
+      md5: 6f7f95aa84315b0cba10efa39e632f0e
+      size: 1389
+    - path: src/models/train_model.py
+      hash: md5
+      md5: 1df866c653e07475a4fa56111f358320
+      size: 2785
+    outs:
+    - path: models/logreg_all.joblib
+      hash: md5
+      md5: 5cc54566e2d59e7263b91d0a33a66712
+      size: 9771
+  evaluate_model:
+    cmd: python main.py --stage evaluate --model logreg --features all
+    deps:
+    - path: features/nlp/bert.csv
+      hash: md5
+      md5: e30a7060a123b802b9df3bf118ddeee7
+      size: 12437331
+    - path: features/nlp/glove.csv
+      hash: md5
+      md5: 091a600128c946150613f8a9a62b720c
+      size: 1623529
+    - path: features/nlp/tfidf.csv
+      hash: md5
+      md5: 9a480bb7769447c2da99f90704a1a46c
+      size: 834262
+    - path: features/structured/structured_features.csv
+      hash: md5
+      md5: e7fdc4ec0e6939aaf0a30aede2268eb8
+      size: 70950
+    - path: main.py
+      hash: md5
+      md5: 6f7f95aa84315b0cba10efa39e632f0e
+      size: 1389
+    - path: models/logreg_all.joblib
+      hash: md5
+      md5: 5cc54566e2d59e7263b91d0a33a66712
+      size: 9771
+    - path: src/models/evaluate.py
+      hash: md5
+      md5: d00f53d5fd9fdb724ff4bb44a3079708
+      size: 3718
+    outs:
+    - path: results/evaluation_metrics.txt
+      hash: md5
+      md5: 0016b14b381d0bebcae8cf018269690f
+      size: 415
+  explain_model:
+    cmd: python main.py --stage explain --model logreg --features structured
+    deps:
+    - path: features/structured/structured_features.csv
+      hash: md5
+      md5: e7fdc4ec0e6939aaf0a30aede2268eb8
+      size: 70950
+    - path: main.py
+      hash: md5
+      md5: 6f7f95aa84315b0cba10efa39e632f0e
+      size: 1389
+    - path: models/logreg_structured.joblib
+      hash: md5
+      md5: e3f4bcc1b1ecf7b11212980b98956411
+      size: 1067
+    - path: src/models/explain.py
+      hash: md5
+      md5: 39a138fe0e10cf03c61d08d274858b95
+      size: 905
+    outs:
+    - path: results/shap_summary_logreg_structured.png
+      hash: md5
+      md5: e03d3627460b3a2d49e861b3258ea1a7
+      size: 301131
+  create_split:
+    cmd: python main.py --stage split --model logreg --features all
+    deps:
+    - path: main.py
+      hash: md5
+      md5: 6f7f95aa84315b0cba10efa39e632f0e
+      size: 1389
+    outs:
+    - path: data/splits/logreg_all_test_indices.csv
+      hash: md5
+      md5: dfacde83656e5730706de5a59690c5be
+      size: 620
+    - path: data/splits/logreg_all_train_indices.csv
+      hash: md5
+      md5: 8bdae0278d2e6c0946fd60ec9f08acaa
+      size: 2482
+  create_split_structured:
+    cmd: python main.py --stage split --model logreg --features structured
+    deps:
+    - path: main.py
+      hash: md5
+      md5: 6f7f95aa84315b0cba10efa39e632f0e
+      size: 1389
+    outs:
+    - path: data/splits/logreg_structured_test_indices.csv
+      hash: md5
+      md5: dfacde83656e5730706de5a59690c5be
+      size: 620
+    - path: data/splits/logreg_structured_train_indices.csv
+      hash: md5
+      md5: 8bdae0278d2e6c0946fd60ec9f08acaa
+      size: 2482
+  train_model_structured:
+    cmd: python main.py --stage train --model logreg --features structured
+    deps:
+    - path: data/splits/logreg_structured_test_indices.csv
+      hash: md5
+      md5: dfacde83656e5730706de5a59690c5be
+      size: 620
+    - path: data/splits/logreg_structured_train_indices.csv
+      hash: md5
+      md5: 8bdae0278d2e6c0946fd60ec9f08acaa
+      size: 2482
+    - path: features/structured/structured_features.csv
+      hash: md5
+      md5: e7fdc4ec0e6939aaf0a30aede2268eb8
+      size: 70950
+    - path: main.py
+      hash: md5
+      md5: 6f7f95aa84315b0cba10efa39e632f0e
+      size: 1389
+    outs:
+    - path: models/logreg_structured.joblib
+      hash: md5
+      md5: e3f4bcc1b1ecf7b11212980b98956411
+      size: 1067
+    - path: models/logreg_structured_scaler.joblib
+      hash: md5
+      md5: 5cec348b199b10716dafe34c6586b601
+      size: 1103
