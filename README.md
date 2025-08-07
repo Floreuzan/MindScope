@@ -5,9 +5,9 @@
 [![DVC](https://img.shields.io/badge/DVC-2.0+-9cf.svg)](https://dvc.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> 🧠 An advanced machine learning pipeline for mental health risk assessment using state-of-the-art NLP techniques.
+> An advanced machine learning pipeline for mental health risk assessment using state-of-the-art NLP techniques.
 
-## 🔍 Project Overview
+## Project Overview
 
 MindScope is a comprehensive feature engineering and machine learning pipeline designed to analyze mental health-related text data and classify posts based on risk level. By leveraging cutting-edge NLP techniques and transformer models, MindScope extracts meaningful patterns from unstructured text to identify potential high-risk mental health indicators.
 
@@ -44,7 +44,7 @@ graph TD
     style G fill:#af9,stroke:#333
 ```
 
-### 📊 Pipeline Stages
+### Pipeline Stages
 
 | Stage | Description | Key Technologies |
 |-------|-------------|-----------------|
@@ -54,35 +54,35 @@ graph TD
 | **4. Structured Feature Extraction** | Extracts metadata and statistical features | TextBlob, VADER, pandas |
 | **5. Visualization** | Generates insightful visualizations of features | matplotlib, seaborn |
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 MindScope/
-├── 📊 data/                      # Data storage
+├── data/                      # Data storage
 │   ├── raw/                     # Raw generated dataset
 │   └── processed/               # Cleaned dataset
-├── 🧠 features/                  # Extracted features
+├── features/                  # Extracted features
 │   ├── nlp/                     # NLP-based features
 │   └── structured/              # Structured features
-├── 📈 reports/                   # Analysis reports and visualizations
+├── reports/                   # Analysis reports and visualizations
 │   └── figures/                 # Generated figures
-├── 🔧 src/                       # Source code
+├── src/                       # Source code
 │   ├── generate_data.py         # Data generation script
 │   ├── preprocessing.py         # Text preprocessing script
 │   ├── features_nlp.py          # NLP feature extraction script
 │   ├── features_structured.py   # Structured feature extraction script
 │   └── visualize_features.py    # Visualization utilities
-├── 🧪 tests/                     # Test suite
+├── tests/                     # Test suite
 │   ├── conftest.py              # Test fixtures
 │   └── test_*.py                # Test modules
-└── 📝 dvc.yaml                   # DVC pipeline configuration
+└── dvc.yaml                   # DVC pipeline configuration
 ```
 
-## 🔬 Feature Engineering
+## Feature Engineering
 
 MindScope extracts a rich set of features from mental health text data, combining traditional NLP techniques with state-of-the-art deep learning approaches.
 
-### 🔤 NLP-based Features
+### NLP-based Features
 
 | Feature Type | Dimensions | Description | Application |
 |--------------|------------|-------------|-------------|
@@ -91,7 +91,7 @@ MindScope extracts a rich set of features from mental health text data, combinin
 | **BERT** | 768 | Bidirectional Encoder Representations from Transformers | Contextual understanding of language |
 | **SentenceTransformers** | 384 | Sentence-level embeddings | Document-level semantic meaning |
 
-### 📊 Structured Features
+### Structured Features
 
 | Feature Category | Examples | Clinical Relevance |
 |------------------|----------|-------------------|
@@ -100,13 +100,13 @@ MindScope extracts a rich set of features from mental health text data, combinin
 | **Temporal Patterns** | Hour of day, day of week, posting frequency | Circadian rhythm disruptions |
 | **Stylometric** | Pronoun usage, negation rate, punctuation patterns | Writing style changes can indicate mental state |
 
-### 📈 Feature Importance
+### Feature Importance
 
 ![Feature Importance](reports/figures/feature_importance.png)
 
 *Top 20 features by importance in risk classification (example visualization)*
 
-## 🛠️ Requirements
+## Requirements
 
 <details>
 <summary>Click to expand dependency list</summary>
@@ -145,7 +145,7 @@ pip install -r requirements.txt
 pip install -r requirements-dev.txt
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Installation
 
@@ -178,7 +178,7 @@ dvc repro
 dvc repro <stage_name>
 ```
 
-## 📋 Usage Guide
+## Usage Guide
 
 ### Pipeline Execution
 
@@ -295,7 +295,7 @@ The pipeline can be customized using command-line arguments or by modifying the 
 python src/generate_data.py --help
 ```
 
-## 📊 Results & Performance
+## Results & Performance
 
 MindScope achieves state-of-the-art performance in mental health risk classification:
 
@@ -307,7 +307,7 @@ MindScope achieves state-of-the-art performance in mental health risk classifica
 
 *Performance metrics on synthetic test dataset*
 
-## 👥 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -317,6 +317,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
